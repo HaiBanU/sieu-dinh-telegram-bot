@@ -60,54 +60,76 @@ async def run_session_workflow(sender: BotSender, session_time: datetime):
 # -------------------------------------------------------------------
 
 
+# /sieu_dinh_bot/main.py
+
 async def main_loop(sender: BotSender):
     logger.info("🚀 Bot đang khởi động và kiểm tra lịch trình...")
     last_day_checked = None
     sent_flags = {}
-    last_session_run_time = None
 
     while True:
         now = datetime.now(config.VN_TZ)
+
+        # --- A. Quản lý trạng thái hàng ngày ---
         if now.date() != last_day_checked:
             logger.info(f"☀️  Ngày mới bắt đầu ({now.strftime('%d/%m/%Y')}). Đặt lại trạng thái.")
             sent_flags = {
-                'good_morning': False, 'good_night': False,
-                'last_rules_sent': None, 'last_schedule_image_hour': -1,
-                'last_intro_video_hour': -1, 'last_golden_tip_hour': -1
+                'good_night_sent': False,
+                'last_rules_sent': None,
+                'last_schedule_image_hour': -1,
+                'last_intro_video_hour': -1,
+                'last_golden_tip_hour': -1,
+                'last_session_run_time': None
             }
             last_day_checked = now.date()
+            
+            # Gửi tin nhắn chào ngày mới ngay khi bước qua ngày mới
+            await sender.send_good_morning()
 
-        current_hour = now.hour
-        is_working_hours = config.SESSION_START_HOUR <= current_hour < config.SESSION_END_HOUR
+        # --- B. Xác định giờ hoạt động chính (có phiên kéo) ---
+        # Bắt đầu từ 6h30 sáng trở đi
+        is_session_hours = now.hour > config.SESSION_START_HOUR or \
+                           (now.hour == config.SESSION_START_HOUR and now.minute >= config.SESSION_START_MINUTE)
 
-        if not is_working_hours:
-            if current_hour < config.SESSION_START_HOUR and not sent_flags['good_morning']:
-                await sender.send_good_morning()
-                sent_flags['good_morning'] = True
-            elif current_hour >= config.SESSION_END_HOUR and not sent_flags['good_night']:
-                await sender.send_good_night()
-                sent_flags['good_night'] = True
-            if current_hour != sent_flags['last_golden_tip_hour']:
-                await sender.send_golden_tip()
-                sent_flags['last_golden_tip_hour'] = current_hour
-        else:
-            if now.minute == 15 and current_hour != sent_flags['last_schedule_image_hour']:
+        if is_session_hours:
+            # --- LOGIC GIỜ HOẠT ĐỘNG CHÍNH (06:30 - 23:59) ---
+            
+            # 1. Gửi các tin nhắn định kỳ (lịch, nội quy, video)
+            if now.minute == 15 and now.hour != sent_flags['last_schedule_image_hour']:
                 await sender.send_schedule_image()
-                sent_flags['last_schedule_image_hour'] = current_hour
-            elif now.minute == 45 and current_hour != sent_flags['last_intro_video_hour']:
+                sent_flags['last_schedule_image_hour'] = now.hour
+            elif now.minute == 45 and now.hour != sent_flags['last_intro_video_hour']:
                 await sender.send_intro_video()
-                sent_flags['last_intro_video_hour'] = current_hour
+                sent_flags['last_intro_video_hour'] = now.hour
             elif sent_flags['last_rules_sent'] is None or (now - sent_flags['last_rules_sent']) >= timedelta(hours=config.RULES_INTERVAL_HOURS):
                 if now.minute % config.SESSION_INTERVAL_MINUTES != 0:
                     await sender.send_group_rules()
                     sent_flags['last_rules_sent'] = now
 
+            # 2. Bắt đầu phiên kéo
             current_session_time = now.replace(second=0, microsecond=0)
             if now.minute % config.SESSION_INTERVAL_MINUTES == 0:
-                if current_session_time != last_session_run_time:
-                    last_session_run_time = current_session_time
+                if sent_flags.get('last_session_run_time') != current_session_time:
+                    sent_flags['last_session_run_time'] = current_session_time
                     asyncio.create_task(run_session_workflow(sender, now))
+            
+            # 3. Gửi tin nhắn Chúc ngủ ngon gần nửa đêm
+            if now.hour == 23 and now.minute >= 55 and not sent_flags.get('good_night_sent'):
+                await sender.send_good_night()
+                sent_flags['good_night_sent'] = True
+        
+        else:
+            # --- LOGIC GIỜ NGHỈ NGƠI (00:00 - 06:29) ---
+            # Vẫn gửi các tip vàng để duy trì tương tác "như người thật"
+            if now.hour != sent_flags.get('last_golden_tip_hour', -1):
+                await sender.send_golden_tip()
+                sent_flags['last_golden_tip_hour'] = now.hour
+            
+            # Ngủ một giấc dài hơn trong giờ này để tiết kiệm tài nguyên
+            await asyncio.sleep(60)
+            continue # Bỏ qua sleep ngắn ở cuối và lặp lại
 
+        # Chờ 10 giây trước khi lặp lại trong giờ hoạt động chính
         await asyncio.sleep(10)
 
 

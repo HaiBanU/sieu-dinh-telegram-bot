@@ -28,9 +28,11 @@ SCHEDULE_IMAGE_PATH = os.path.join(IMAGE_DIR, 'khung_gio.jpg')
 RULES_GIF_PATH = os.path.join(IMAGE_DIR, 'rules.gif')
 
 # --- LỊCH TRÌNH HOẠT ĐỘNG ---
-SESSION_START_HOUR = 7
-SESSION_END_HOUR = 22
+SESSION_START_HOUR = 6 
+SESSION_START_MINUTE = 30
 
+# Bot sẽ hoạt động đến hết ngày (23:59)
+SESSION_END_HOUR = 24 
 # --- THỜI GIAN ---
 SESSION_INTERVAL_MINUTES = 10
 RULES_INTERVAL_HOURS = 2
