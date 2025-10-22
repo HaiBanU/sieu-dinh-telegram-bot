@@ -6,10 +6,35 @@ from datetime import datetime, timedelta
 import config
 from modules.sender import BotSender
 
+# --- PHẦN THÊM MỚI ---
+import os
+from flask import Flask
+from threading import Thread
+# --- KẾT THÚC PHẦN THÊM MỚI ---
+
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# --- PHẦN THÊM MỚI ---
+# Tạo một ứng dụng web Flask
+app = Flask(__name__)
+
+# Tạo một "route" hay một "endpoint" để UptimeRobot có thể truy cập
+@app.route('/')
+def home():
+    return "I'm alive!"
+
+# Hàm để chạy web server
+def run_web_server():
+    # Lấy cổng mà Render cung cấp, nếu không có thì mặc định là 10000
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port)
+# --- KẾT THÚC PHẦN THÊM MỚI ---
+
+
 async def run_session_workflow(sender: BotSender, session_time: datetime):
+    # (Giữ nguyên toàn bộ nội dung của hàm này)
     prediction_message_id = None
     try:
         logger.info(f"====== BẮT ĐẦU CA KÉO {session_time.strftime('%H:%M')} ======")
@@ -18,7 +43,6 @@ async def run_session_workflow(sender: BotSender, session_time: datetime):
         await sender.send_start_session(session_time)
         await asyncio.sleep(config.DELAY_STEP_1_TO_2)
         
-        # Vẫn gửi ảnh bàn để thông báo, nhưng không dùng số bàn này để chụp kết quả nữa
         await sender.send_table_images()
         
         await asyncio.sleep(config.DELAY_STEP_2_TO_3)
@@ -28,11 +52,11 @@ async def run_session_workflow(sender: BotSender, session_time: datetime):
     except Exception as e:
         logger.error(f"❌ Gặp lỗi nghiêm trọng giữa ca kéo: {e}")
     finally:
-        # Xóa chosen_table_number khỏi lời gọi hàm
         await sender.send_end_session(session_time, next_session_time, prediction_message_id)
         logger.info(f"====== KẾT THÚC CA KÉO {session_time.strftime('%H:%M')} ======\n")
 
 async def main_loop(sender: BotSender):
+    # (Giữ nguyên toàn bộ nội dung của hàm này)
     logger.info("🚀 Bot đang khởi động và kiểm tra lịch trình...")
     last_day_checked = None
     sent_flags = {}
@@ -87,13 +111,21 @@ async def main_loop(sender: BotSender):
 
 
 if __name__ == "__main__":
-    # Cập nhật lại điều kiện kiểm tra, bỏ các biến của casino
     if not all([config.TELEGRAM_TOKEN, config.CHAT_ID]):
         logger.critical("❌ Một hoặc nhiều cấu hình (TELEGRAM_TOKEN, CHAT_ID) chưa được thiết lập trong file .env.")
     else:
         try:
             bot_sender = BotSender(config.TELEGRAM_TOKEN, config.CHAT_ID)
-            asyncio.run(main_loop(bot_sender))
+            
+            # --- PHẦN THAY ĐỔI ---
+            # Chạy bot trong một luồng (thread) riêng
+            bot_thread = Thread(target=lambda: asyncio.run(main_loop(bot_sender)))
+            bot_thread.start()
+            
+            # Chạy web server trong luồng chính
+            run_web_server()
+            # --- KẾT THÚC PHẦN THAY ĐỔI ---
+
         except (KeyboardInterrupt, SystemExit):
             logger.info("🛑 Bot đã dừng hoạt động.")
         except Exception as e:
