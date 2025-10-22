@@ -94,14 +94,19 @@ async def main_loop(sender: BotSender):
         if is_session_hours:
             # --- LOGIC GIỜ HOẠT ĐỘNG CHÍNH (06:30 - 23:59) ---
             
-            # 1. Gửi các tin nhắn định kỳ (lịch, nội quy, video)
+            # 1. Gửi các tin nhắn định kỳ (lịch, nội quy, video, tip vàng)
             if now.minute == 15 and now.hour != sent_flags['last_schedule_image_hour']:
                 await sender.send_schedule_image()
                 sent_flags['last_schedule_image_hour'] = now.hour
+            # *** THAY ĐỔI: Chuyển logic gửi Tip Vàng vào đây, gửi vào phút 30 mỗi giờ ***
+            elif now.minute == 30 and now.hour != sent_flags['last_golden_tip_hour']:
+                await sender.send_golden_tip()
+                sent_flags['last_golden_tip_hour'] = now.hour
             elif now.minute == 45 and now.hour != sent_flags['last_intro_video_hour']:
                 await sender.send_intro_video()
                 sent_flags['last_intro_video_hour'] = now.hour
             elif sent_flags['last_rules_sent'] is None or (now - sent_flags['last_rules_sent']) >= timedelta(hours=config.RULES_INTERVAL_HOURS):
+                # Chỉ gửi nội quy nếu không trùng với thời gian bắt đầu phiên
                 if now.minute % config.SESSION_INTERVAL_MINUTES != 0:
                     await sender.send_group_rules()
                     sent_flags['last_rules_sent'] = now
@@ -120,13 +125,9 @@ async def main_loop(sender: BotSender):
         
         else:
             # --- LOGIC GIỜ NGHỈ NGƠI (00:00 - 06:29) ---
-            # Vẫn gửi các tip vàng để duy trì tương tác "như người thật"
-            if now.hour != sent_flags.get('last_golden_tip_hour', -1):
-                await sender.send_golden_tip()
-                sent_flags['last_golden_tip_hour'] = now.hour
-            
-            # Ngủ một giấc dài hơn trong giờ này để tiết kiệm tài nguyên
-            await asyncio.sleep(60)
+            # *** THAY ĐỔI: Bot sẽ không gửi tip nữa và ngủ một giấc dài ***
+            logger.info(f"Giờ nghỉ ngơi (từ 00:00 đến 06:29). Bot sẽ kiểm tra lại sau {config.OFF_HOURS_SLEEP_MINUTES} phút.")
+            await asyncio.sleep(config.OFF_HOURS_SLEEP_MINUTES * 60)
             continue # Bỏ qua sleep ngắn ở cuối và lặp lại
 
         # Chờ 10 giây trước khi lặp lại trong giờ hoạt động chính
