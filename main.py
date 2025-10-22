@@ -4,58 +4,66 @@ import asyncio
 import logging
 from datetime import datetime, timedelta
 import config
-from modules.sender import BotSender
-
-# --- PHẦN THÊM MỚI ---
+# --- NÂNG CẤP LOGIC: Import lớp lỗi tùy chỉnh ---
+from modules.sender import BotSender, MediaSendError
 import os
 from flask import Flask
 from threading import Thread
-# --- KẾT THÚC PHẦN THÊM MỚI ---
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# --- PHẦN THÊM MỚI ---
-# Tạo một ứng dụng web Flask
 app = Flask(__name__)
 
-# Tạo một "route" hay một "endpoint" để UptimeRobot có thể truy cập
 @app.route('/')
 def home():
     return "Bot is alive and the web server is running!"
-# --- KẾT THÚC PHẦN THÊM MỚI ---
 
 
+# --- NÂNG CẤP LOGIC: Xử lý lỗi một cách chặt chẽ ---
 async def run_session_workflow(sender: BotSender, session_time: datetime):
-    # (Giữ nguyên toàn bộ nội dung của hàm này)
     prediction_message_id = None
+    next_session_time = session_time + timedelta(minutes=config.SESSION_INTERVAL_MINUTES)
+    
     try:
         logger.info(f"====== BẮT ĐẦU CA KÉO {session_time.strftime('%H:%M')} ======")
-        next_session_time = session_time + timedelta(minutes=config.SESSION_INTERVAL_MINUTES)
         
+        # Các bước trong quy trình có thể tung ra MediaSendError
         await sender.send_start_session(session_time)
         await asyncio.sleep(config.DELAY_STEP_1_TO_2)
         
         await sender.send_table_images()
-        
         await asyncio.sleep(config.DELAY_STEP_2_TO_3)
+        
         prediction_message_id = await sender.send_prediction()
         await asyncio.sleep(config.DELAY_STEP_3_TO_4)
-        
+
+    except MediaSendError as e:
+        # Đây là phần xử lý thông minh: Nếu có lỗi media, hủy ca và thông báo
+        logger.error(f"---!!! HỦY CA KÉO do lỗi MediaSendError: {e} !!!---")
+        await sender._send_message_with_retry(
+            f"❗️❗️ <b>THÔNG BÁO KHẨN</b> ❗️❗️\n\n"
+            f"Rất tiếc, ca kéo <b>{session_time.strftime('%H:%M')}</b> đã gặp sự cố kỹ thuật và không thể tiếp tục.\n\n"
+            f"Nguyên nhân: <i>Lỗi không thể gửi tệp media quan trọng.</i>\n\n"
+            f"Mong toàn thể anh em thông cảm. Chúng tôi sẽ khắc phục sớm nhất có thể."
+        )
+
     except Exception as e:
-        logger.error(f"❌ Gặp lỗi nghiêm trọng giữa ca kéo: {e}")
+        # Bắt các lỗi không xác định khác
+        logger.error(f"❌ Gặp lỗi không xác định nghiêm trọng giữa ca kéo: {e}")
+    
     finally:
+        # Dù thành công hay thất bại, vẫn chạy phần kết thúc để dọn dẹp (gỡ ghim, báo ca tiếp)
         await sender.send_end_session(session_time, next_session_time, prediction_message_id)
         logger.info(f"====== KẾT THÚC CA KÉO {session_time.strftime('%H:%M')} ======\n")
+# -------------------------------------------------------------------
 
 
 async def main_loop(sender: BotSender):
-    # (Giữ nguyên toàn bộ nội dung của hàm này)
     logger.info("🚀 Bot đang khởi động và kiểm tra lịch trình...")
     last_day_checked = None
     sent_flags = {}
-    
     last_session_run_time = None
 
     while True:
@@ -79,11 +87,9 @@ async def main_loop(sender: BotSender):
             elif current_hour >= config.SESSION_END_HOUR and not sent_flags['good_night']:
                 await sender.send_good_night()
                 sent_flags['good_night'] = True
-            
             if current_hour != sent_flags['last_golden_tip_hour']:
                 await sender.send_golden_tip()
                 sent_flags['last_golden_tip_hour'] = current_hour
-        
         else:
             if now.minute == 15 and current_hour != sent_flags['last_schedule_image_hour']:
                 await sender.send_schedule_image()
@@ -104,17 +110,15 @@ async def main_loop(sender: BotSender):
 
         await asyncio.sleep(10)
 
-# --- THAY ĐỔI QUAN TRỌNG NHẤT ---
-# Di chuyển logic khởi động bot ra khỏi "if __name__ == '__main__':"
+
+# (Phần khởi động bot giữ nguyên như cũ)
 if not all([config.TELEGRAM_TOKEN, config.CHAT_ID]):
     logger.critical("❌ Thiếu TELEGRAM_TOKEN hoặc CHAT_ID trong biến môi trường.")
 else:
     logger.info("✅ Đã tìm thấy các biến môi trường. Bắt đầu khởi tạo bot...")
     bot_sender = BotSender(config.TELEGRAM_TOKEN, config.CHAT_ID)
     
-    # Chạy vòng lặp chính của bot trong một luồng riêng
     bot_thread = Thread(target=lambda: asyncio.run(main_loop(bot_sender)))
-    bot_thread.daemon = True  # Đảm bảo thread sẽ tắt khi chương trình chính tắt
+    bot_thread.daemon = True
     bot_thread.start()
     logger.info("✅ Luồng bot đã được khởi động.")
-# --- KẾT THÚC THAY ĐỔI ---
