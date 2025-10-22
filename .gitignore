@@ -1,0 +1,6 @@
+# Tệp môi trường
+.env
+
+# Thư mục cache của Python
+__pycache__/
+*.pyc
