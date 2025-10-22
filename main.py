@@ -23,13 +23,7 @@ app = Flask(__name__)
 # Tạo một "route" hay một "endpoint" để UptimeRobot có thể truy cập
 @app.route('/')
 def home():
-    return "I'm alive!"
-
-# Hàm để chạy web server
-def run_web_server():
-    # Lấy cổng mà Render cung cấp, nếu không có thì mặc định là 10000
-    port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port)
+    return "Bot is alive and the web server is running!"
 # --- KẾT THÚC PHẦN THÊM MỚI ---
 
 
@@ -54,6 +48,7 @@ async def run_session_workflow(sender: BotSender, session_time: datetime):
     finally:
         await sender.send_end_session(session_time, next_session_time, prediction_message_id)
         logger.info(f"====== KẾT THÚC CA KÉO {session_time.strftime('%H:%M')} ======\n")
+
 
 async def main_loop(sender: BotSender):
     # (Giữ nguyên toàn bộ nội dung của hàm này)
@@ -109,24 +104,17 @@ async def main_loop(sender: BotSender):
 
         await asyncio.sleep(10)
 
-
-if __name__ == "__main__":
-    if not all([config.TELEGRAM_TOKEN, config.CHAT_ID]):
-        logger.critical("❌ Một hoặc nhiều cấu hình (TELEGRAM_TOKEN, CHAT_ID) chưa được thiết lập trong file .env.")
-    else:
-        try:
-            bot_sender = BotSender(config.TELEGRAM_TOKEN, config.CHAT_ID)
-            
-            # --- PHẦN THAY ĐỔI ---
-            # Chạy bot trong một luồng (thread) riêng
-            bot_thread = Thread(target=lambda: asyncio.run(main_loop(bot_sender)))
-            bot_thread.start()
-            
-            # Chạy web server trong luồng chính
-            run_web_server()
-            # --- KẾT THÚC PHẦN THAY ĐỔI ---
-
-        except (KeyboardInterrupt, SystemExit):
-            logger.info("🛑 Bot đã dừng hoạt động.")
-        except Exception as e:
-            logger.critical(f"❌ Bot gặp lỗi không thể phục hồi: {e}")
+# --- THAY ĐỔI QUAN TRỌNG NHẤT ---
+# Di chuyển logic khởi động bot ra khỏi "if __name__ == '__main__':"
+if not all([config.TELEGRAM_TOKEN, config.CHAT_ID]):
+    logger.critical("❌ Thiếu TELEGRAM_TOKEN hoặc CHAT_ID trong biến môi trường.")
+else:
+    logger.info("✅ Đã tìm thấy các biến môi trường. Bắt đầu khởi tạo bot...")
+    bot_sender = BotSender(config.TELEGRAM_TOKEN, config.CHAT_ID)
+    
+    # Chạy vòng lặp chính của bot trong một luồng riêng
+    bot_thread = Thread(target=lambda: asyncio.run(main_loop(bot_sender)))
+    bot_thread.daemon = True  # Đảm bảo thread sẽ tắt khi chương trình chính tắt
+    bot_thread.start()
+    logger.info("✅ Luồng bot đã được khởi động.")
+# --- KẾT THÚC THAY ĐỔI ---
