@@ -22,7 +22,6 @@ class BotSender:
         self.chat_id = chat_id
         logging.info("✅ Bot đã khởi tạo thành công!")
 
-    # <<< THAY ĐỔI: Hàm này sẽ trả về đối tượng Message hoặc None >>>
     async def _send_message_with_retry(self, text: str, parse_mode='HTML') -> Message | None:
         for attempt in range(2):
             try:
@@ -54,6 +53,7 @@ class BotSender:
         raise MediaSendError(final_error_msg)
     
     async def _send_photo_with_retry(self, photo_path: str, caption: str, parse_mode='HTML'):
+        # ... (giữ nguyên hàm này)
         for attempt in range(2):
             try:
                 with open(photo_path, 'rb') as photo_file:
@@ -69,6 +69,7 @@ class BotSender:
         raise MediaSendError(final_error_msg)
 
     async def _send_gif_with_retry(self, gif_path: str, caption: str, parse_mode='HTML'):
+        # ... (giữ nguyên hàm này)
         for attempt in range(2):
             try:
                 with open(gif_path, 'rb') as gif_file:
@@ -86,6 +87,8 @@ class BotSender:
         final_error_msg = f"Gửi GIF thất bại sau 2 lần thử: {os.path.basename(gif_path)}"
         logging.error(f"❌ {final_error_msg}")
         raise MediaSendError(final_error_msg)
+
+    # ... (giữ nguyên các hàm send_good_morning, send_good_night, send_group_rules, ...)
 
     async def send_good_morning(self):
         await self._send_message_with_retry(messages.get_good_morning_message())
@@ -120,8 +123,10 @@ class BotSender:
         except MediaSendError as e:
             logging.error(f"Lỗi khi gửi video hướng dẫn: {e}. Sẽ thử lại sau.")
 
-    async def send_start_session(self, session_time: datetime):
-        await self._send_video(config.START_SESSION_VIDEO, messages.get_start_session_caption(session_time))
+    # <<< THAY ĐỔI 1: Hàm này giờ trả về Message để lấy ID >>>
+    async def send_start_session(self, session_time: datetime) -> Message:
+        sent_message = await self._send_video(config.START_SESSION_VIDEO, messages.get_start_session_caption(session_time))
+        return sent_message
 
     async def send_table_images(self) -> int:
         chosen_table_number = random.randint(1, 8)
@@ -131,47 +136,30 @@ class BotSender:
         await self._send_photo_with_retry(image_path, caption)
         return chosen_table_number
 
-    # <<< NÂNG CẤP TOÀN BỘ HÀM NÀY >>>
+    # <<< THAY ĐỔI 2: Hàm này không còn ghim tin nhắn, chỉ gửi và trả về ID >>>
     async def send_prediction(self) -> int | None:
-        """
-        Gửi video dự đoán. Nếu thất bại, tự động gửi tin nhắn văn bản thay thế.
-        Trả về message_id để ghim và gỡ ghim.
-        """
         sent_message = None
         try:
-            # Ưu tiên gửi video
             sent_message = await self._send_video(config.PREDICTION_VIDEO, messages.get_prediction_caption())
         except MediaSendError as e:
-            # Nếu gửi video lỗi, chuyển sang gửi văn bản
             logging.warning(f"Lỗi gửi video dự đoán: {e}. Chuyển sang gửi tin nhắn văn bản.")
             fallback_text = messages.get_prediction_text_fallback()
             sent_message = await self._send_message_with_retry(fallback_text)
 
-        # Nếu gửi thành công (video hoặc văn bản), ghim tin nhắn
         if sent_message:
-            try:
-                await self.bot.pin_chat_message(self.chat_id, sent_message.message_id, disable_notification=True)
-                logging.info(f"📌  Đã ghim tin nhắn lệnh (ID: {sent_message.message_id}).")
-                return sent_message.message_id
-            except TelegramError as e:
-                logging.error(f"❌ Lỗi khi ghim tin nhắn: {e}")
-                # Dù không ghim được nhưng vẫn trả về message_id để có thể gỡ ghim sau
-                return sent_message.message_id
+            return sent_message.message_id
         
-        # Nếu cả video và văn bản đều gửi thất bại
         logging.error("❌❌ GỬI LỆNH THẤT BẠI: Không thể gửi video lẫn tin nhắn văn bản.")
         return None
-    # <<< KẾT THÚC NÂNG CẤP >>>
 
     async def send_end_session(self, session_time: datetime, next_session_time: datetime, message_id_to_unpin: int | None):
         if message_id_to_unpin:
             try:
                 await self.bot.unpin_chat_message(self.chat_id, message_id_to_unpin)
-                logging.info(f"📌  Đã gỡ ghim tin nhắn lệnh (ID: {message_id_to_unpin}).")
+                logging.info(f"📌  Đã gỡ ghim tin nhắn (ID: {message_id_to_unpin}).")
             except TelegramError as e:
                 logging.warning(f"⚠️  Không thể gỡ ghim tin nhắn: {e}")
         try:
             await self._send_video(config.END_SESSION_VIDEO, messages.get_end_session_caption(session_time, next_session_time))
         except MediaSendError:
-            # Nếu gửi video kết thúc ca bị lỗi, gửi tạm tin nhắn văn bản
             await self._send_message_with_retry(messages.get_end_session_caption(session_time, next_session_time))
