@@ -53,7 +53,6 @@ class BotSender:
         raise MediaSendError(final_error_msg)
     
     async def _send_photo_with_retry(self, photo_path: str, caption: str, parse_mode='HTML'):
-        # ... (giữ nguyên hàm này)
         for attempt in range(2):
             try:
                 with open(photo_path, 'rb') as photo_file:
@@ -69,7 +68,6 @@ class BotSender:
         raise MediaSendError(final_error_msg)
 
     async def _send_gif_with_retry(self, gif_path: str, caption: str, parse_mode='HTML'):
-        # ... (giữ nguyên hàm này)
         for attempt in range(2):
             try:
                 with open(gif_path, 'rb') as gif_file:
@@ -87,9 +85,6 @@ class BotSender:
         final_error_msg = f"Gửi GIF thất bại sau 2 lần thử: {os.path.basename(gif_path)}"
         logging.error(f"❌ {final_error_msg}")
         raise MediaSendError(final_error_msg)
-
-    # ... (giữ nguyên các hàm send_good_morning, send_good_night, send_group_rules, ...)
-
     async def send_good_morning(self):
         await self._send_message_with_retry(messages.get_good_morning_message())
         logging.info("☀️  Đã gửi tin nhắn chào buổi sáng.")
@@ -98,15 +93,17 @@ class BotSender:
         await self._send_message_with_retry(messages.get_good_night_message())
         logging.info("🌙  Đã gửi tin nhắn chúc ngủ ngon.")
     
-    # /sieu_dinh_bot/modules/sender.py
+    # =============================================================================
+    # <<< PHẦN SỬA LỖI: CÁC HÀM DƯỚI ĐÂY ĐÃ ĐƯỢC THỤT LỀ VÀO TRONG CLASS >>>
+    # =============================================================================
 
-async def send_group_rules(self):
-    try:
-        # Thay đổi từ gửi GIF sang gửi Video
-        await self._send_video(config.RULES_VIDEO_PATH, messages.get_animated_rules_caption())
-        logging.info("📜  Đã gửi video nội quy nhóm.")
-    except MediaSendError as e:
-        logging.error(f"Lỗi khi gửi video nội quy: {e}. Sẽ thử lại sau.")
+    async def send_group_rules(self):
+        try:
+            # Thay đổi từ gửi GIF sang gửi Video
+            await self._send_video(config.RULES_VIDEO_PATH, messages.get_animated_rules_caption())
+            logging.info("📜  Đã gửi video nội quy nhóm.")
+        except MediaSendError as e:
+            logging.error(f"Lỗi khi gửi video nội quy: {e}. Sẽ thử lại sau.")
 
     async def send_golden_tip(self):
         await self._send_message_with_retry(messages.get_golden_tip())
@@ -126,7 +123,6 @@ async def send_group_rules(self):
         except MediaSendError as e:
             logging.error(f"Lỗi khi gửi video hướng dẫn: {e}. Sẽ thử lại sau.")
 
-    # <<< THAY ĐỔI 1: Hàm này giờ trả về Message để lấy ID >>>
     async def send_start_session(self, session_time: datetime) -> Message:
         sent_message = await self._send_video(config.START_SESSION_VIDEO, messages.get_start_session_caption(session_time))
         return sent_message
@@ -139,7 +135,6 @@ async def send_group_rules(self):
         await self._send_photo_with_retry(image_path, caption)
         return chosen_table_number
 
-    # <<< THAY ĐỔI 2: Hàm này không còn ghim tin nhắn, chỉ gửi và trả về ID >>>
     async def send_prediction(self) -> int | None:
         sent_message = None
         try:
