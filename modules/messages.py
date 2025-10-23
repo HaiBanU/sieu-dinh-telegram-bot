@@ -83,8 +83,8 @@ def get_start_session_caption(session_time: datetime):
     time_str = session_time.strftime('%H:%M - %d/%m')
     return f"""🔥🔥  <b>𝗖𝗔 𝗞𝗘́𝗢:  {time_str}</b>  🔥🔥
 ━━━━━━━━━━━━━━━━━━━━
-🔥🔥ANH EM TẬP TRUNG, CHUẨN BỊ VÀO CA.🔥🔥
-🔥BOSS🔥 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
+💰💰💰ANH EM TẬP TRUNG, CHUẨN BỊ VÀO CA.💰💰💰
+💎💎BOSS💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
 
 def get_table_announcement_caption(table_number: int):
     return f"""💎 💎  <b>𝗦𝗔̉𝗡𝗛 𝗖𝗛𝗢̛𝗜: 𝗦𝗘𝗫𝗬 𝗕𝗔𝗖𝗖𝗔𝗥𝗔𝗧</b> 💎  💎
