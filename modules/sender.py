@@ -53,15 +53,15 @@ class BotSender:
         raise MediaSendError(final_error_msg)
     
     # =========================================================================
-    # <<< SỬA ĐỔI TẠI ĐÂY: Gửi ảnh dưới dạng file để không bị mờ/vỡ >>>
+    # <<< HOÀN LẠI TẠI ĐÂY: Quay về dùng send_photo để ảnh hiển thị đẹp >>>
     # =========================================================================
     async def _send_photo_with_retry(self, photo_path: str, caption: str, parse_mode='HTML'):
         for attempt in range(2):
             try:
                 with open(photo_path, 'rb') as photo_file:
-                    # Đổi từ send_photo sang send_document để gửi ảnh chất lượng gốc
-                    await self.bot.send_document(self.chat_id, document=photo_file, caption=caption, parse_mode=parse_mode)
-                logging.info(f"Đã gửi ảnh (không nén): {os.path.basename(photo_path)}")
+                    # Dùng lại send_photo như ban đầu
+                    await self.bot.send_photo(self.chat_id, photo_file, caption=caption, parse_mode=parse_mode)
+                logging.info(f"Đã gửi ảnh: {os.path.basename(photo_path)}")
                 return True
             except Exception as e:
                 logging.warning(f"Lỗi gửi ảnh (lần {attempt+1}): {e}. Thử lại sau {config.RETRY_DELAY_SECONDS}s...")
@@ -112,6 +112,7 @@ class BotSender:
     async def send_schedule_image(self):
         caption = "⏰ <b>KHUNG GIỜ LÊN CA HIẾU B.C.R</b> ⏰\n\n<i>Anh em chủ động theo dõi lịch để vào đúng phiên nhé!</i>"
         try:
+            # Gửi ảnh lịch trình cũng nên dùng ảnh chất lượng cao
             await self._send_photo_with_retry(config.SCHEDULE_IMAGE_PATH, caption)
         except MediaSendError as e:
             logging.error(f"Lỗi khi gửi ảnh lịch trình: {e}. Sẽ thử lại sau.")
@@ -127,12 +128,9 @@ class BotSender:
         sent_message = await self._send_video(config.START_SESSION_VIDEO, messages.get_start_session_caption(session_time))
         return sent_message
 
-    # =========================================================================
-    # <<< SỬA ĐỔI TẠI ĐÂY: Tìm file .png thay vì .jpg >>>
-    # =========================================================================
     async def send_table_images(self) -> int:
         chosen_table_number = random.randint(1, 8)
-        # Tìm file ảnh có đuôi .png
+        # Vẫn giữ nguyên là .png
         image_name = f"table{chosen_table_number}.png"
         image_path = os.path.join(config.TABLE_IMAGES_DIR, image_name)
         caption = messages.get_table_announcement_caption(chosen_table_number)
