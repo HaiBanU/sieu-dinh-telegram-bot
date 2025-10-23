@@ -129,7 +129,7 @@ class BotSender:
 
     async def send_table_images(self) -> int:
         chosen_table_number = random.randint(1, 8)
-        image_name = f"table{chosen_table_number}.jpg"
+        image_name = f"table{chosen_table_number}.png"
         image_path = os.path.join(config.TABLE_IMAGES_DIR, image_name)
         caption = messages.get_table_announcement_caption(chosen_table_number)
         await self._send_photo_with_retry(image_path, caption)
