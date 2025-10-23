@@ -52,12 +52,16 @@ class BotSender:
         logging.error(f"❌ {final_error_msg}")
         raise MediaSendError(final_error_msg)
     
+    # =========================================================================
+    # <<< SỬA ĐỔI TẠI ĐÂY: Gửi ảnh dưới dạng file để không bị mờ/vỡ >>>
+    # =========================================================================
     async def _send_photo_with_retry(self, photo_path: str, caption: str, parse_mode='HTML'):
         for attempt in range(2):
             try:
                 with open(photo_path, 'rb') as photo_file:
-                    await self.bot.send_photo(self.chat_id, photo_file, caption=caption, parse_mode=parse_mode)
-                logging.info(f"Đã gửi ảnh: {os.path.basename(photo_path)}")
+                    # Đổi từ send_photo sang send_document để gửi ảnh chất lượng gốc
+                    await self.bot.send_document(self.chat_id, document=photo_file, caption=caption, parse_mode=parse_mode)
+                logging.info(f"Đã gửi ảnh (không nén): {os.path.basename(photo_path)}")
                 return True
             except Exception as e:
                 logging.warning(f"Lỗi gửi ảnh (lần {attempt+1}): {e}. Thử lại sau {config.RETRY_DELAY_SECONDS}s...")
@@ -85,6 +89,7 @@ class BotSender:
         final_error_msg = f"Gửi GIF thất bại sau 2 lần thử: {os.path.basename(gif_path)}"
         logging.error(f"❌ {final_error_msg}")
         raise MediaSendError(final_error_msg)
+        
     async def send_good_morning(self):
         await self._send_message_with_retry(messages.get_good_morning_message())
         logging.info("☀️  Đã gửi tin nhắn chào buổi sáng.")
@@ -93,13 +98,8 @@ class BotSender:
         await self._send_message_with_retry(messages.get_good_night_message())
         logging.info("🌙  Đã gửi tin nhắn chúc ngủ ngon.")
     
-    # =============================================================================
-    # <<< PHẦN SỬA LỖI: CÁC HÀM DƯỚI ĐÂY ĐÃ ĐƯỢC THỤT LỀ VÀO TRONG CLASS >>>
-    # =============================================================================
-
     async def send_group_rules(self):
         try:
-            # Thay đổi từ gửi GIF sang gửi Video
             await self._send_video(config.RULES_VIDEO_PATH, messages.get_animated_rules_caption())
             logging.info("📜  Đã gửi video nội quy nhóm.")
         except MediaSendError as e:
@@ -127,8 +127,12 @@ class BotSender:
         sent_message = await self._send_video(config.START_SESSION_VIDEO, messages.get_start_session_caption(session_time))
         return sent_message
 
+    # =========================================================================
+    # <<< SỬA ĐỔI TẠI ĐÂY: Tìm file .png thay vì .jpg >>>
+    # =========================================================================
     async def send_table_images(self) -> int:
         chosen_table_number = random.randint(1, 8)
+        # Tìm file ảnh có đuôi .png
         image_name = f"table{chosen_table_number}.png"
         image_path = os.path.join(config.TABLE_IMAGES_DIR, image_name)
         caption = messages.get_table_announcement_caption(chosen_table_number)
