@@ -147,17 +147,9 @@ Toàn bộ anh em nghỉ ngơi, bảo toàn lợi nhuận và chuẩn bị cho c
 ⏰  Hẹn gặp lại anh em tại ca kế tiếp lúc <b>~ {next_time_str}</b>."""
 
 def get_animated_rules_caption():
-    """Lấy nội dung caption cho tin nhắn Nội Quy Vàng dạng GIF."""
-    return f"""📜   <b>𝗡𝗢̣̂𝗜 𝗤𝗨𝗬 𝗩𝗔̀𝗡𝗚 — ANH EM CẦN ĐỌC</b>   📜
+    """Lấy nội dung caption cho video Nội Quy Vàng."""
+    return f"""📜   <b>𝗡𝗢̣̂𝗜 𝗤𝗨𝗬 𝗩𝗔̀𝗡𝗚 — ANH EM CẦN XEM KỸ</b>   📜
 ━━━━━━━━━━━━━━━━━━━━━━
-<i>Để đảm bảo một sân chơi công bằng và hiệu quả, hãy cùng nhau tuân thủ những nguyên tắc cốt lõi sau:</i>
+<i>Để đảm bảo một sân chơi công bằng và hiệu quả, anh em vui lòng xem kỹ video và tuân thủ các nguyên tắc của nhóm.</i>
 
-1️⃣  <b>KỶ LUẬT VỐN:</b> Luôn vào lệnh đúng <b><code>10% TỔNG VỐN</code></b>. Đây là nguyên tắc sống còn để đi đường dài. Tuyệt đối không gấp thếp, không đánh theo cảm tính.
-
-2️⃣  <b>TẬP TRUNG TÍN HIỆU:</b> Chỉ theo lệnh từ chuyên gia. Không chat riêng, không gửi link quảng cáo hay các nội dung làm loãng nhóm trong giờ kéo.
-
-3️⃣  <b>TÂM LÝ VỮNG VÀNG:</b> Thắng bại là chuyện thường tình. Quan trọng là giữ được cái đầu lạnh, không cay cú. Thua 2 ca liên tiếp nên tạm nghỉ.
-
-➡️  Mọi thắc mắc cần hỗ trợ, liên hệ ngay cho <b>{config.BOSS_SUPPORT_LINK}</b> để được giải đáp!
-
-<b>Cảm ơn sự hợp tác của tất cả anh em!</b>"""
+🆘 Mọi thắc mắc cần hỗ trợ, liên hệ ngay cho <b>{config.BOSS_SUPPORT_LINK}</b> để được giải đáp!"""

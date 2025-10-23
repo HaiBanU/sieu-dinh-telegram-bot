@@ -22,10 +22,11 @@ START_SESSION_VIDEO = os.path.join(VIDEO_DIR, 'vao_ca.mp4')
 PREDICTION_VIDEO = os.path.join(VIDEO_DIR, 'du_doan.mp4')
 END_SESSION_VIDEO = os.path.join(VIDEO_DIR, 'ket_ca.mp4')
 INTRO_VIDEO_PATH = os.path.join(VIDEO_DIR, 'chia_von.mp4')
+RULES_VIDEO_PATH = os.path.join(VIDEO_DIR, 'noi_quy.mp4')
 
 TABLE_IMAGES_DIR = os.path.join(IMAGE_DIR, 'tables')
 SCHEDULE_IMAGE_PATH = os.path.join(IMAGE_DIR, 'khung_gio.jpg')
-RULES_GIF_PATH = os.path.join(IMAGE_DIR, 'rules.gif')
+
 
 # --- LỊCH TRÌNH HOẠT ĐỘNG ---
 SESSION_START_HOUR = 6 

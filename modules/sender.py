@@ -98,12 +98,15 @@ class BotSender:
         await self._send_message_with_retry(messages.get_good_night_message())
         logging.info("🌙  Đã gửi tin nhắn chúc ngủ ngon.")
     
-    async def send_group_rules(self):
-        try:
-            await self._send_gif_with_retry(config.RULES_GIF_PATH, messages.get_animated_rules_caption())
-            logging.info("📜  Đã gửi tin nhắn nội quy nhóm (dạng GIF).")
-        except MediaSendError as e:
-            logging.error(f"Lỗi khi gửi nội quy nhóm: {e}. Sẽ thử lại sau.")
+    # /sieu_dinh_bot/modules/sender.py
+
+async def send_group_rules(self):
+    try:
+        # Thay đổi từ gửi GIF sang gửi Video
+        await self._send_video(config.RULES_VIDEO_PATH, messages.get_animated_rules_caption())
+        logging.info("📜  Đã gửi video nội quy nhóm.")
+    except MediaSendError as e:
+        logging.error(f"Lỗi khi gửi video nội quy: {e}. Sẽ thử lại sau.")
 
     async def send_golden_tip(self):
         await self._send_message_with_retry(messages.get_golden_tip())
