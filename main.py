@@ -19,16 +19,16 @@ app = Flask(__name__)
 def home():
     return "Bot is alive and the web server is running!"
 
-async def run_session_workflow(sender: BotSender, session_time: datetime):
-    # Thay vì ghim tin nhắn dự đoán, ta sẽ ghim tin nhắn bắt đầu ca
+# <<< THAY ĐỔI TẠI ĐÂY: Thêm tham số `session_number` >>>
+async def run_session_workflow(sender: BotSender, session_time: datetime, session_number: int):
     message_id_to_pin = None
     next_session_time = session_time + timedelta(minutes=config.SESSION_INTERVAL_MINUTES)
     
     try:
-        logger.info(f"====== BẮT ĐẦU CA KÉO {session_time.strftime('%H:%M')} ======")
+        logger.info(f"====== BẮT ĐẦU CA KÉO #{session_number} ({session_time.strftime('%H:%M')}) ======")
         
-        # Bước 1: Gửi video vào ca và lấy ID
-        start_session_message = await sender.send_start_session(session_time)
+        # Bước 1: Gửi video vào ca, truyền cả `session_number` vào
+        start_session_message = await sender.send_start_session(session_time, session_number)
         message_id_to_pin = start_session_message.message_id
         
         # Ghim tin nhắn này
@@ -40,11 +40,9 @@ async def run_session_workflow(sender: BotSender, session_time: datetime):
 
         await asyncio.sleep(config.DELAY_STEP_1_TO_2)
         
-        # Các bước sau giữ nguyên
         await sender.send_table_images()
         await asyncio.sleep(config.DELAY_STEP_2_TO_3)
         
-        # Hàm này giờ chỉ gửi lệnh, không ghim nữa
         await sender.send_prediction()
         await asyncio.sleep(config.DELAY_STEP_3_TO_4)
 
@@ -61,9 +59,8 @@ async def run_session_workflow(sender: BotSender, session_time: datetime):
         logger.error(f"❌ Gặp lỗi không xác định nghiêm trọng giữa ca kéo: {e}")
     
     finally:
-        # Cuối ca, gỡ ghim tin nhắn 'Vào ca'
         await sender.send_end_session(session_time, next_session_time, message_id_to_pin)
-        logger.info(f"====== KẾT THÚC CA KÉO {session_time.strftime('%H:%M')} ======\n")
+        logger.info(f"====== KẾT THÚC CA KÉO #{session_number} ({session_time.strftime('%H:%M')}) ======\n")
 
 async def main_loop(sender: BotSender):
     logger.info("🚀 Bot đang khởi động và kiểm tra lịch trình...")
@@ -87,8 +84,10 @@ async def main_loop(sender: BotSender):
             
             await sender.send_good_morning()
 
-        is_session_hours = now.hour > config.SESSION_START_HOUR or \
-                           (now.hour == config.SESSION_START_HOUR and now.minute >= config.SESSION_START_MINUTE)
+        # <<< THAY ĐỔI TẠI ĐÂY: Sửa đổi logic xác định giờ hoạt động >>>
+        is_session_hours = (now.hour > config.SESSION_START_HOUR or \
+                           (now.hour == config.SESSION_START_HOUR and now.minute >= config.SESSION_START_MINUTE)) and \
+                           (now.hour < 23 or (now.hour == 23 and now.minute <= 30))
 
         if is_session_hours:
             if now.minute == 15 and now.hour != sent_flags['last_schedule_image_hour']:
@@ -109,15 +108,23 @@ async def main_loop(sender: BotSender):
             if now.minute % config.SESSION_INTERVAL_MINUTES == 0:
                 if sent_flags.get('last_session_run_time') != current_session_time:
                     sent_flags['last_session_run_time'] = current_session_time
-                    asyncio.create_task(run_session_workflow(sender, now))
-            
-            # <<< THAY ĐỔI THỜI GIAN GỬI TIN NHẮN NGỦ NGON TẠI ĐÂY >>>
-            # Sẽ gửi lúc 23:40, sau khi ca cuối cùng (23:30) kết thúc.
-            if now.hour == 23 and now.minute == 40 and not sent_flags.get('good_night_sent'):
-                await sender.send_good_night()
-                sent_flags['good_night_sent'] = True
+                    
+                    # <<< THAY ĐỔI TẠI ĐÂY: Tính toán số thứ tự ca >>>
+                    start_minutes = config.SESSION_START_HOUR * 60 + config.SESSION_START_MINUTE
+                    current_minutes = now.hour * 60 + now.minute
+                    session_number = ((current_minutes - start_minutes) // config.SESSION_INTERVAL_MINUTES) + 1
+                    
+                    if 1 <= session_number <= 100:
+                        asyncio.create_task(run_session_workflow(sender, now, session_number))
         
-        else:
+        # Logic gửi tin nhắn ngủ ngon không thay đổi, nhưng giờ sẽ không có ca nào chạy sau nó nữa
+        if now.hour == 23 and now.minute == 40 and not sent_flags.get('good_night_sent'):
+            await sender.send_good_night()
+            sent_flags['good_night_sent'] = True
+        
+        # Logic giờ nghỉ ngơi (chỉ áp dụng cho sáng sớm)
+        is_off_hours = now.hour < config.SESSION_START_HOUR
+        if is_off_hours and not is_session_hours:
             logger.info(f"Giờ nghỉ ngơi (từ 00:00 đến {config.SESSION_START_HOUR-1}:59). Bot sẽ kiểm tra lại sau {config.OFF_HOURS_SLEEP_MINUTES} phút.")
             await asyncio.sleep(config.OFF_HOURS_SLEEP_MINUTES * 60)
             continue

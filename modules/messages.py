@@ -24,9 +24,8 @@ def get_good_morning_message():
 
 Chúc toàn bộ anh em trong nhóm 𝗕𝗖𝗥 𝟭 𝗟𝗘̣̂𝗡𝗛 một ngày mới tràn đầy năng lượng, giao dịch thuận lợi và gặt hái nhiều thắng lợi!
 
-⏰ <i>Ca kéo đầu tiên sẽ bắt đầu lúc <b>07:00</b>. Anh em chuẩn bị sẵn sàng nhé!</i>"""
+⏰ <i>Ca kéo đầu tiên (CA 1) sẽ bắt đầu lúc <b>07:00</b>. Anh em chuẩn bị sẵn sàng nhé!</i>"""
 
-# <<< NỘI DUNG LỜI CHÚC NGỦ NGON ĐÃ ĐƯỢC THAY ĐỔI TẠI ĐÂY >>>
 def get_good_night_message():
     return f"""🌙 <b>KẾT THÚC NGÀY LÀM VIỆC</b> 🌙
 ━━━━━━━━━━━━━━━━━━━━
@@ -80,12 +79,37 @@ def get_golden_tip():
     return random.choice(GOLDEN_TIPS)
 
 # --- NỘI DUNG CÁC BƯỚC TRONG CA KÉO ---
-def get_start_session_caption(session_time: datetime):
+
+# <<< THAY ĐỔI LỚN TẠI ĐÂY: Thêm `session_number` và logic cho ca 1, ca 100 >>>
+def get_start_session_caption(session_time: datetime, session_number: int):
     time_str = session_time.strftime('%H:%M - %d/%m')
-    return f"""🔥🔥  <b>𝗖𝗔 𝗞𝗘́𝗢:  {time_str}</b>  🔥🔥
+    
+    # Tin nhắn cho CA 1
+    if session_number == 1:
+        return f"""🔥🔥  <b>CA KÉO {session_number}: {time_str}</b>  🔥🔥
+━━━━━━━━━━━━━━━━━━━━
+🚀 <b>Bắt đầu ngày mới!</b> Chúc toàn thể anh em một ngày giao dịch đại thắng, gặt hái nhiều thành công!
+
+💰💰💰ANH EM TẬP TRUNG, CHUẨN BỊ VÀO CA.💰💰💰
+💎💎BOSS💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
+
+    # Tin nhắn cho CA 100 (ca cuối)
+    elif session_number == 100:
+        return f"""🔥🔥  <b>CA KÉO {session_number} (CA CUỐI): {time_str}</b>  🔥🔥
+━━━━━━━━━━━━━━━━━━━━
+Đây là ca cuối cùng trong ngày, mọi người vào lệnh xong chốt lãi ngủ một giấc thật ngon nhé.
+Ngày mai chúng ta lại bắt đầu vào lúc 7h sáng!
+
+💰💰💰VÀO VIỆC NỐT CA CUỐI NÀO.💰💰💰
+💎💎BOSS💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
+
+    # Tin nhắn cho các ca còn lại
+    else:
+        return f"""🔥🔥  <b>CA KÉO {session_number}: {time_str}</b>  🔥🔥
 ━━━━━━━━━━━━━━━━━━━━
 💰💰💰ANH EM TẬP TRUNG, CHUẨN BỊ VÀO CA.💰💰💰
 💎💎BOSS💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
+
 
 def get_table_announcement_caption(table_number: int):
     return f"""💎 💎  <b>𝗦𝗔̉𝗡𝗛 𝗖𝗛𝗢̛𝗜: 𝗦𝗘𝗫𝗬 𝗕𝗔𝗖𝗖𝗔𝗥𝗔𝗧</b> 💎  💎
