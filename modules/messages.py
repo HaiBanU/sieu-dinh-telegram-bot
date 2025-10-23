@@ -89,7 +89,7 @@ def get_start_session_caption(session_time: datetime):
 def get_table_announcement_caption(table_number: int):
     return f"""💎 💎  <b>𝗦𝗔̉𝗡𝗛 𝗖𝗛𝗢̛𝗜: 𝗦𝗘𝗫𝗬 𝗕𝗔𝗖𝗖𝗔𝗥𝗔𝗧</b> 💎  💎
 ━━━━━━━━━━━━━━━━━━━━
-🃏  <b>𝗕𝗔̀𝗡 Đ𝗔̃ 𝗖𝗛𝗢̣𝗡:  BACCARAT {table_number}</b>
+🃏  <b>𝗕𝗔̀𝗡 Đ𝗔̃ 𝗖𝗛𝗢̣𝗡:  BACCATAT {table_number}</b>
 
 <i>Anh em tập trung vào bàn này.
 𝗟𝗲̣̂𝗻𝗵 𝗰𝗵𝘂𝘆𝗲̂𝗻 𝗴𝗶𝗮 sẽ được đưa ra sau 20 giây!</i>"""
@@ -113,31 +113,28 @@ def get_prediction_caption():
 🎯 <b>Nguyên tắc:</b> Giữ vững kỷ luật!
 <i>(Lệnh ra lúc: {now.strftime('%H:%M:%S')})</i>"""
 
-
-def get_prediction_caption_v2():
-    """
-    Phiên bản nâng cấp của tin nhắn dự đoán, sử dụng các hiệu ứng đặc biệt (đã sửa lỗi h1).
-    """
+# <<< THÊM MỚI: Tin nhắn dự phòng dạng văn bản >>>
+def get_prediction_text_fallback():
+    """Tạo tin nhắn dự đoán dạng văn bản khi gửi video thất bại."""
     now = datetime.now(config.VN_TZ)
     du_doan = random.choice(["CÁI", "CON"])
     icon = "🔴" if du_doan == "CÁI" else "🔵"
     ly_do = random.choice(PREDICTION_REASONS[du_doan])
     
-    arrow_emoji = "➡️"
-
-    return f"""<blockquote><b>❗️ LỆNH KHẨN TỪ CHUYÊN GIA ❗️</b>
-<i>Phân tích lúc: {now.strftime('%H:%M:%S')}</i>
-
-Tín hiệu vừa quét được: <b>"{ly_do}"</b></blockquote>
-
-{arrow_emoji} LỰA CHỌN CUỐI CÙNG LÀ:
-
-<tg-spoiler><b>{icon} {du_doan.upper()} {icon}</b></tg-spoiler>
+    return f"""⚠️ <b>THÔNG BÁO DỰ PHÒNG (LỖI VIDEO)</b> ⚠️
+⚡️⚡️ <b>LỆNH TỪ CHUYÊN GIA</b> ⚡️⚡️
 ━━━━━━━━━━━━━━━━━━
-<b>⚠️ QUY TẮC VÀNG:</b>
-Vào đúng <code>10% TỔNG VỐN</code>.
-Tuyệt đối tuân thủ, không bẻ lệnh!"""
+<i>Phân tích: "{ly_do}"</i>
 
+👉 <b>LỰA CHỌN CUỐI CÙNG:</b>
+
+<b>{icon} {du_doan.upper()} {icon}</b>
+
+━━━━━━━━━━━━━━━━━━
+💰 <b>Vào vốn:</b> <b><code>10% TỔNG VỐN</code></b>
+🎯 <b>Nguyên tắc:</b> Giữ vững kỷ luật!
+<i>(Lệnh ra lúc: {now.strftime('%H:%M:%S')})</i>"""
+# <<< KẾT THÚC THÊM MỚI >>>
 
 def get_end_session_caption(session_time: datetime, next_session_time: datetime):
     time_str = session_time.strftime('%H:%M - %d/%m')
