@@ -26,14 +26,15 @@ Chúc toàn bộ anh em trong nhóm 𝗕𝗖𝗥 𝟭 𝗟𝗘̣̂𝗡𝗛 một
 
 ⏰ <i>Ca kéo đầu tiên sẽ bắt đầu lúc <b>07:00</b>. Anh em chuẩn bị sẵn sàng nhé!</i>"""
 
+# <<< NỘI DUNG LỜI CHÚC NGỦ NGON ĐÃ ĐƯỢC THAY ĐỔI TẠI ĐÂY >>>
 def get_good_night_message():
-    return f"""🌙 <b>𝗞𝗘̂́𝗧 𝗧𝗛𝗨́𝗖 𝗡𝗚𝗔̀𝗬 𝗟𝗔̀𝗠 𝗩𝗜𝗘̣̂𝗖</b> 🌙
+    return f"""🌙 <b>KẾT THÚC NGÀY LÀM VIỆC</b> 🌙
 ━━━━━━━━━━━━━━━━━━━━
-Một ngày giao dịch đã khép lại. Cảm ơn tất cả anh em đã đồng hành, tuân thủ kỷ luật và cùng nhau chiến đấu.
+Ca kéo cuối cùng trong ngày đã hoàn tất. Cảm ơn tất cả anh em đã đồng hành và chiến đấu hết mình.
 
-Dù thắng hay thua, điều quan trọng nhất là chúng ta đã học hỏi và rút ra kinh nghiệm. Hãy nghỉ ngơi thật tốt để lấy lại năng lượng.
+Hãy nghỉ ngơi thật tốt để nạp lại năng lượng. Chúc cả nhà ngủ ngon, chuẩn bị cho một ngày mai giao dịch thành công và rực rỡ hơn!
 
-❤️ Chúc cả nhà ngủ ngon và hẹn gặp lại vào 7h sáng mai!"""
+❤️ Hẹn gặp lại anh em vào 7h sáng mai tại ca đầu tiên!"""
 
 # --- TIN NHẮN NỘI QUY ---
 def get_group_rules_message():
@@ -94,7 +95,6 @@ def get_table_announcement_caption(table_number: int):
 <i>Anh em tập trung vào bàn này.
 𝗟𝗲̣̂𝗻𝗵 𝗰𝗵𝘂𝘆𝗲̂𝗻 𝗴𝗶𝗮 sẽ được đưa ra sau 20 giây!</i>"""
 
-# <<< SỬA LỖI TẠI ĐÂY >>>
 def get_prediction_caption():
     now = datetime.now(config.VN_TZ)
     du_doan = random.choice(["CÁI", "CON"])
@@ -113,7 +113,6 @@ def get_prediction_caption():
 💰 <b>Vào vốn:</b> <b><code>10% TỔNG VỐN</code></b>
 🎯 <b>Nguyên tắc:</b> Giữ vững kỷ luật!
 <i>(Lệnh ra lúc: {now.strftime('%H:%M:%S')})</i>"""
-# <<< KẾT THÚC SỬA LỖI >>>
 
 def get_prediction_text_fallback():
     """Tạo tin nhắn dự đoán dạng văn bản khi gửi video thất bại."""

@@ -28,11 +28,12 @@ TABLE_IMAGES_DIR = os.path.join(IMAGE_DIR, 'tables')
 SCHEDULE_IMAGE_PATH = os.path.join(IMAGE_DIR, 'khung_gio.jpg')
 
 
-# --- LỊCH TRÌNH HOẠT ĐỘNG ---
-SESSION_START_HOUR = 6 
-SESSION_START_MINUTE = 30
+# --- LỊCH TRÌNH HOẠT ĐỘNG (ĐÃ THAY ĐỔI) ---
+# Bot sẽ bắt đầu ca đầu tiên lúc 7h00 sáng
+SESSION_START_HOUR = 7 
+SESSION_START_MINUTE = 0
 
-# Bot sẽ hoạt động đến hết ngày (23:59)
+# Bot sẽ hoạt động đến hết ca 23:30
 SESSION_END_HOUR = 24 
 # --- THỜI GIAN ---
 SESSION_INTERVAL_MINUTES = 10

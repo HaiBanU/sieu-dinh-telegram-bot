@@ -19,7 +19,6 @@ app = Flask(__name__)
 def home():
     return "Bot is alive and the web server is running!"
 
-# <<< THAY ĐỔI LOGIC GHIM TIN NHẮN TẠI ĐÂY >>>
 async def run_session_workflow(sender: BotSender, session_time: datetime):
     # Thay vì ghim tin nhắn dự đoán, ta sẽ ghim tin nhắn bắt đầu ca
     message_id_to_pin = None
@@ -65,8 +64,6 @@ async def run_session_workflow(sender: BotSender, session_time: datetime):
         # Cuối ca, gỡ ghim tin nhắn 'Vào ca'
         await sender.send_end_session(session_time, next_session_time, message_id_to_pin)
         logger.info(f"====== KẾT THÚC CA KÉO {session_time.strftime('%H:%M')} ======\n")
-
-# ... (Toàn bộ phần main_loop và phần khởi động bot giữ nguyên như cũ)
 
 async def main_loop(sender: BotSender):
     logger.info("🚀 Bot đang khởi động và kiểm tra lịch trình...")
@@ -114,12 +111,14 @@ async def main_loop(sender: BotSender):
                     sent_flags['last_session_run_time'] = current_session_time
                     asyncio.create_task(run_session_workflow(sender, now))
             
-            if now.hour == 23 and now.minute >= 55 and not sent_flags.get('good_night_sent'):
+            # <<< THAY ĐỔI THỜI GIAN GỬI TIN NHẮN NGỦ NGON TẠI ĐÂY >>>
+            # Sẽ gửi lúc 23:40, sau khi ca cuối cùng (23:30) kết thúc.
+            if now.hour == 23 and now.minute == 40 and not sent_flags.get('good_night_sent'):
                 await sender.send_good_night()
                 sent_flags['good_night_sent'] = True
         
         else:
-            logger.info(f"Giờ nghỉ ngơi (từ 00:00 đến 06:29). Bot sẽ kiểm tra lại sau {config.OFF_HOURS_SLEEP_MINUTES} phút.")
+            logger.info(f"Giờ nghỉ ngơi (từ 00:00 đến {config.SESSION_START_HOUR-1}:59). Bot sẽ kiểm tra lại sau {config.OFF_HOURS_SLEEP_MINUTES} phút.")
             await asyncio.sleep(config.OFF_HOURS_SLEEP_MINUTES * 60)
             continue
 
@@ -127,7 +126,7 @@ async def main_loop(sender: BotSender):
 
 
 if not all([config.TELEGRAM_TOKEN, config.CHAT_ID]):
-    logger.critical("❌ Thiếu TELEGRAM_TOKEN hoặc CHAT_ID trong biến môi trường.")
+    logger.critical("❌ Thiếu TELEGRAM_TOKEN hoặc CHÁT_ID trong biến môi trường.")
 else:
     logger.info("✅ Đã tìm thấy các biến môi trường. Bắt đầu khởi tạo bot...")
     bot_sender = BotSender(config.TELEGRAM_TOKEN, config.CHAT_ID)
