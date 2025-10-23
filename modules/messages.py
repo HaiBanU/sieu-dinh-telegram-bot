@@ -94,6 +94,7 @@ def get_table_announcement_caption(table_number: int):
 <i>Anh em tập trung vào bàn này.
 𝗟𝗲̣̂𝗻𝗵 𝗰𝗵𝘂𝘆𝗲̂𝗻 𝗴𝗶𝗮 sẽ được đưa ra sau 20 giây!</i>"""
 
+# <<< SỬA LỖI TẠI ĐÂY >>>
 def get_prediction_caption():
     now = datetime.now(config.VN_TZ)
     du_doan = random.choice(["CÁI", "CON"])
@@ -106,14 +107,14 @@ def get_prediction_caption():
 
 👉 <b>LỰA CHỌN CUỐI CÙNG:</b>
 
-<b><h1>{icon} {du_doan.upper()} {icon}</h1></b>
+<b>{icon} {du_doan.upper()} {icon}</b>
 
 ━━━━━━━━━━━━━━━━━━
 💰 <b>Vào vốn:</b> <b><code>10% TỔNG VỐN</code></b>
 🎯 <b>Nguyên tắc:</b> Giữ vững kỷ luật!
 <i>(Lệnh ra lúc: {now.strftime('%H:%M:%S')})</i>"""
+# <<< KẾT THÚC SỬA LỖI >>>
 
-# <<< THÊM MỚI: Tin nhắn dự phòng dạng văn bản >>>
 def get_prediction_text_fallback():
     """Tạo tin nhắn dự đoán dạng văn bản khi gửi video thất bại."""
     now = datetime.now(config.VN_TZ)
@@ -134,7 +135,6 @@ def get_prediction_text_fallback():
 💰 <b>Vào vốn:</b> <b><code>10% TỔNG VỐN</code></b>
 🎯 <b>Nguyên tắc:</b> Giữ vững kỷ luật!
 <i>(Lệnh ra lúc: {now.strftime('%H:%M:%S')})</i>"""
-# <<< KẾT THÚC THÊM MỚI >>>
 
 def get_end_session_caption(session_time: datetime, next_session_time: datetime):
     time_str = session_time.strftime('%H:%M - %d/%m')
