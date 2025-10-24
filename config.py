@@ -9,7 +9,7 @@ load_dotenv()
 # --- CẤU HÌNH CƠ BẢN ---
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
-BOSS_SUPPORT_LINK = '@BossMinhHieuu'
+𝓑𝓞𝓢𝓢_SUPPORT_LINK = '@𝓑𝓞𝓢𝓢MinhHieuu'
 
 # --- MÚI GIỜ ---
 VN_TZ = pytz.timezone('Asia/Ho_Chi_Minh')

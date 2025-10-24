@@ -47,7 +47,7 @@ def get_group_rules_message():
 
 💡  <b>𝗚𝗜𝗨̛̃ 𝗩𝗨̛̃𝗡𝗚 𝗧𝗔̂𝗠 𝗟𝗬́:</b> Thắng không kiêu, bại không nản. Thị trường luôn có biến động, kỷ luật sẽ giúp chúng ta đi đường dài.
 
-🆘  <b>𝗖𝗔̂̀𝗡 𝗛𝗢̂̃ 𝗧𝗥𝗢̛̣?:</b> Nếu có bất kỳ thắc mắc hay vấn đề gì, hãy liên hệ trực tiếp với Boss qua: <b>{config.BOSS_SUPPORT_LINK}</b>
+🆘  <b>𝗖𝗔̂̀𝗡 𝗛𝗢̂̃ 𝗧𝗥𝗢̛̣?:</b> Nếu có bất kỳ thắc mắc hay vấn đề gì, hãy liên hệ trực tiếp với 𝓑𝓞𝓢𝓢 qua: <b>{config.𝓑𝓞𝓢𝓢_SUPPORT_LINK}</b>
 
 <i>Cảm ơn sự hợp tác của toàn thể anh em!</i>"""
 
@@ -91,7 +91,7 @@ def get_start_session_caption(session_time: datetime, session_number: int):
 🚀 <b>Bắt đầu ngày mới!</b> Chúc toàn thể anh em một ngày giao dịch đại thắng, gặt hái nhiều thành công!
 
 💰💰💰ANH EM TẬP TRUNG, CHUẨN BỊ VÀO CA.💰💰💰
-💎💎BOSS💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
+💎💎𝓑𝓞𝓢𝓢💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
 
     # Tin nhắn cho CA 100 (ca cuối)
     elif session_number == 100:
@@ -101,14 +101,14 @@ def get_start_session_caption(session_time: datetime, session_number: int):
 Ngày mai chúng ta lại bắt đầu vào lúc 7h sáng!
 
 💰💰💰VÀO VIỆC NỐT CA CUỐI NÀO.
-💎💎BOSS💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
+💎💎𝓑𝓞𝓢𝓢💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
 
     # Tin nhắn cho các ca còn lại
     else:
         return f"""🔥🔥  <b>𝓒𝓐 𝓚𝓔́𝓞 {session_number}: {time_str}</b>  
 ━━━━━━━━━━━━━━━━
 💰💰💰𝓐𝓝𝓗 𝓔𝓜 𝓣𝓐̣̂𝓟 𝓣𝓡𝓤𝓝𝓖, 𝓒𝓗𝓤𝓐̂̉𝓝 𝓑𝓘̣ 𝓥𝓐̀𝓞 𝓒𝓐.
-💎💎BOSS💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
+💎💎𝓑𝓞𝓢𝓢💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
 
 
 def get_table_announcement_caption(table_number: int):
@@ -175,4 +175,4 @@ def get_animated_rules_caption():
 ━━━━━━━━━━━━━━━
 <i>Để đảm bảo một sân chơi công bằng và hiệu quả, anh em vui lòng xem kỹ video và tuân thủ các nguyên tắc của nhóm.</i>
 
-🆘 Mọi thắc mắc cần hỗ trợ, liên hệ ngay cho <b>{config.BOSS_SUPPORT_LINK}</b> để được giải đáp!"""
+🆘 Mọi thắc mắc cần hỗ trợ, liên hệ ngay cho <b>{config.𝓑𝓞𝓢𝓢_SUPPORT_LINK}</b> để được giải đáp!"""
