@@ -113,7 +113,7 @@ class BotSender:
             logging.error(f"Lỗi khi gửi ảnh lịch trình: {e}. Sẽ thử lại sau.")
     
     async def send_intro_video(self):
-        caption = "💰 <b>HƯỚNG DẪN CHIA VỐN THEO TIÊU CHUẨN NHÓM</b> 💰\n\n<i>Ai có mức vốn bao nhiêu thì mình có chia lệnh cược sẵn mọi người xem nhé!</i>"
+        caption = "💰 <b>HƯỚNG DẪN CHIA VỐN THEO TIÊU CHUẨN NHÓM</b>\n\n<i>Ai có mức vốn bao nhiêu thì mình có chia lệnh cược sẵn mọi người xem nhé!</i>"
         try:
             await self._send_video(config.INTRO_VIDEO_PATH, caption)
         except MediaSendError as e:
