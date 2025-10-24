@@ -18,18 +18,18 @@ def get_good_morning_message():
     now = datetime.now(config.VN_TZ)
     ngay_tieng_viet = get_vietnamese_day_of_week(now)
     ngay_thang_nam = now.strftime('%d/%m/%Y')
-    return f"""🌅 <b>𝗖𝗛𝗔̀𝗢 𝗡𝗚𝗔̀Y 𝗠𝗢̛́𝗜 𝗖𝗨̀𝗡𝗚 𝗧𝗘𝗔𝗠</b> 🌅
+    return f"""🌅 <b>𝓒𝓗𝓐̀𝓞 𝓝𝓖𝓐̀𝓨 𝓜𝓞̛́𝓘 𝓒𝓤̀𝓝𝓖 𝓣𝓔𝓐𝓜</b> 🌅
 ━━━━━━━━━━━━━━━━━━━━
 📅 Hôm nay là: <b>{ngay_tieng_viet}, ngày {ngay_thang_nam}</b>
 
-Chúc toàn bộ anh em trong nhóm 𝗕𝗖𝗥 𝟭 𝗟𝗘̣̂𝗡𝗛 một ngày mới tràn đầy năng lượng, giao dịch thuận lợi và gặt hái nhiều thắng lợi!
+Chúc toàn bộ anh em trong nhóm 𝓑𝓒𝓡 𝟏 𝓛𝓔̣̂𝓝𝓗 một ngày mới tràn đầy năng lượng, giao dịch thuận lợi và gặt hái nhiều thắng lợi!
 
-⏰ <i>Ca kéo đầu tiên (CA 1) sẽ bắt đầu lúc <b>07:00</b>. Anh em chuẩn bị sẵn sàng nhé!</i>"""
+⏰ <i>𝓒𝓐 𝓚𝓔́𝓞 đầu tiên (CA 1) sẽ bắt đầu lúc <b>07:00</b>. Anh em chuẩn bị sẵn sàng nhé!</i>"""
 
 def get_good_night_message():
     return f"""🌙 <b>KẾT THÚC NGÀY LÀM VIỆC</b> 🌙
 ━━━━━━━━━━━━━━━━━━━━
-Ca kéo cuối cùng trong ngày đã hoàn tất. Cảm ơn tất cả anh em đã đồng hành và chiến đấu hết mình.
+𝓒𝓐 𝓚𝓔́𝓞 cuối cùng trong ngày đã hoàn tất. Cảm ơn tất cả anh em đã đồng hành và chiến đấu hết mình.
 
 Hãy nghỉ ngơi thật tốt để nạp lại năng lượng. Chúc cả nhà ngủ ngon, chuẩn bị cho một ngày mai giao dịch thành công và rực rỡ hơn!
 
@@ -37,7 +37,7 @@ Hãy nghỉ ngơi thật tốt để nạp lại năng lượng. Chúc cả nhà
 
 # --- TIN NHẮN NỘI QUY ---
 def get_group_rules_message():
-    return f"""📜   <b>𝗡𝗢̣̂𝗜 𝗤𝗨𝗬 𝗩𝗔̀𝗡𝗚 𝗖𝗨̉𝗔 𝗡𝗛𝗢́𝗠</b>   📜
+    return f"""📜   <b>𝓝𝓞̣̂𝓘 𝓠𝓤𝓨 𝓥𝓐̀𝓝𝓖 𝓒𝓤̉𝓐 𝓝𝓗𝓞́𝓜</b>   📜
 ━━━━━━━━━━━━━━━━━━━━
 Để xây dựng một cộng đồng vững mạnh và hiệu quả, anh em vui lòng tuân thủ các quy tắc sau:
 
@@ -78,7 +78,7 @@ def get_golden_tip():
     """Lấy một tip vàng ngẫu nhiên."""
     return random.choice(GOLDEN_TIPS)
 
-# --- NỘI DUNG CÁC BƯỚC TRONG CA KÉO ---
+# --- NỘI DUNG CÁC BƯỚC TRONG 𝓒𝓐 𝓚𝓔́𝓞 ---
 
 # <<< THAY ĐỔI LỚN TẠI ĐÂY: Thêm `session_number` và logic cho ca 1, ca 100 >>>
 def get_start_session_caption(session_time: datetime, session_number: int):
@@ -86,7 +86,7 @@ def get_start_session_caption(session_time: datetime, session_number: int):
     
     # Tin nhắn cho CA 1
     if session_number == 1:
-        return f"""🔥🔥  <b>CA KÉO {session_number}: {time_str}</b> 
+        return f"""🔥🔥  <b>𝓒𝓐 𝓚𝓔́𝓞 {session_number}: {time_str}</b> 
 ━━━━━━━━━━━━━━━━
 🚀 <b>Bắt đầu ngày mới!</b> Chúc toàn thể anh em một ngày giao dịch đại thắng, gặt hái nhiều thành công!
 
@@ -95,7 +95,7 @@ def get_start_session_caption(session_time: datetime, session_number: int):
 
     # Tin nhắn cho CA 100 (ca cuối)
     elif session_number == 100:
-        return f"""🔥🔥  <b>CA KÉO {session_number} (CA CUỐI): {time_str}</b> 
+        return f"""🔥🔥  <b>𝓒𝓐 𝓚𝓔́𝓞 {session_number} (CA CUỐI): {time_str}</b> 
 ━━━━━━━━━━━━━━━━
 Đây là ca cuối cùng trong ngày, mọi người vào lệnh xong chốt lãi ngủ một giấc thật ngon nhé.
 Ngày mai chúng ta lại bắt đầu vào lúc 7h sáng!
@@ -105,16 +105,16 @@ Ngày mai chúng ta lại bắt đầu vào lúc 7h sáng!
 
     # Tin nhắn cho các ca còn lại
     else:
-        return f"""🔥🔥  <b>CA KÉO {session_number}: {time_str}</b>  
+        return f"""🔥🔥  <b>𝓒𝓐 𝓚𝓔́𝓞 {session_number}: {time_str}</b>  
 ━━━━━━━━━━━━━━━━
-💰💰💰ANH EM TẬP TRUNG, CHUẨN BỊ VÀO CA.
+💰💰💰𝓐𝓝𝓗 𝓔𝓜 𝓣𝓐̣̂𝓟 𝓣𝓡𝓤𝓝𝓖, 𝓒𝓗𝓤𝓐̂̉𝓝 𝓑𝓘̣ 𝓥𝓐̀𝓞 𝓒𝓐.
 💎💎BOSS💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
 
 
 def get_table_announcement_caption(table_number: int):
-    return f"""💎 💎  <b>𝗦𝗔̉𝗡𝗛 𝗖𝗛𝗢̛𝗜: 𝗦𝗘𝗫𝗬 𝗕𝗔𝗖𝗖𝗔𝗥𝗔𝗧</b> 
+    return f"""💎 💎  <b>𝗦𝗔̉𝗡𝗛 𝗖𝗛𝗢̛𝗜: 𝗦𝗘𝗫𝗬 𝘽𝘼𝘾𝘾𝘼𝙍𝘼𝙏</b> 
 ━━━━━━━━━━━━━━━━
-🃏  <b>𝗕𝗔̀𝗡 Đ𝗔̃ 𝗖𝗛𝗢̣𝗡:  BACCATAT {table_number}</b>
+🃏  <b>𝗕𝗔̀𝗡 Đ𝗔̃ 𝗖𝗛𝗢̣𝗡:  𝘽𝘼𝘾𝘾𝘼𝙍𝘼𝙏 {table_number}</b>
 
 <i>Anh em tập trung vào bàn này.
 𝗟𝗲̣̂𝗻𝗵 𝗰𝗵𝘂𝘆𝗲̂𝗻 𝗴𝗶𝗮 sẽ được đưa ra sau 20 giây!</i>"""
@@ -129,12 +129,12 @@ def get_prediction_caption():
 ━━━━━━━━━━━━━━
 <i>"{ly_do}"</i>
 
-👉 <b>LỰA CHỌN CUỐI CÙNG:</b>
+👉 <b>𝙇𝙐̛̣𝘼 𝘾𝙃𝙊̣𝙉 𝘾𝙐𝙊̂́𝙄 𝘾𝙐̀𝙉𝙂:</b>
 
 <b>{icon} {du_doan.upper()} {icon}</b>
 
 ━━━━━━━━━━━━━━
-💰 <b>Vào vốn:</b> <b><code>10% TỔNG VỐN</code></b>
+💰 <b>Vào vốn:</b> <b><code>𝟏𝟎% 𝓣𝓞̂̉𝓝𝓖 𝓥𝓞̂́𝓝</code></b>
 🎯 <b>Nguyên tắc:</b> Giữ vững kỷ luật!
 <i>(Lệnh ra lúc: {now.strftime('%H:%M:%S')})</i>"""
 
@@ -162,7 +162,7 @@ def get_prediction_text_fallback():
 def get_end_session_caption(session_time: datetime, next_session_time: datetime):
     time_str = session_time.strftime('%H:%M - %d/%m')
     next_time_str = next_session_time.strftime('%H:%M')
-    return f"""🏁   <b>𝗞𝗘̂́𝗧 𝗧𝗛𝗨́𝗖 𝗖𝗔 𝗞𝗘́𝗢: {time_str}</b>   🏁
+    return f"""🏁   <b>𝓚𝓔̂́𝓣 𝓣𝓗𝓤́𝓒 𝓒𝓐 𝓚𝓔́𝓞: {time_str}</b>   🏁
 ━━━━━━━━━━━━━━━
 Toàn bộ anh em nghỉ ngơi, bảo toàn lợi nhuận và chuẩn bị cho cơ hội tiếp theo.
 <b>Kỷ luật là sức mạnh!</b>
@@ -171,7 +171,7 @@ Toàn bộ anh em nghỉ ngơi, bảo toàn lợi nhuận và chuẩn bị cho c
 
 def get_animated_rules_caption():
     """Lấy nội dung caption cho video Nội Quy Vàng."""
-    return f"""📜   <b>𝗡𝗢̣̂𝗜 𝗤𝗨𝗬 𝗩𝗔̀𝗡𝗚 — ANH EM CẦN XEM KỸ</b>   📜
+    return f"""📜<b>𝓝𝓞̣̂𝓘 𝓠𝓤𝓨 𝓥𝓐̀𝓝𝓖 — 𝓐𝓝𝓗 𝓔𝓜 𝓒𝓐̂̀𝓝 𝓧𝓔𝓜 𝓚𝓨̃</b>📜
 ━━━━━━━━━━━━━━━
 <i>Để đảm bảo một sân chơi công bằng và hiệu quả, anh em vui lòng xem kỹ video và tuân thủ các nguyên tắc của nhóm.</i>
 

@@ -25,7 +25,7 @@ async def run_session_workflow(sender: BotSender, session_time: datetime, sessio
     next_session_time = session_time + timedelta(minutes=config.SESSION_INTERVAL_MINUTES)
     
     try:
-        logger.info(f"====== BẮT ĐẦU CA KÉO #{session_number} ({session_time.strftime('%H:%M')}) ======")
+        logger.info(f"====== BẮT ĐẦU 𝓒𝓐 𝓚𝓔́𝓞 #{session_number} ({session_time.strftime('%H:%M')}) ======")
         
         # Bước 1: Gửi video vào ca, truyền cả `session_number` vào
         start_session_message = await sender.send_start_session(session_time, session_number)
@@ -47,20 +47,20 @@ async def run_session_workflow(sender: BotSender, session_time: datetime, sessio
         await asyncio.sleep(config.DELAY_STEP_3_TO_4)
 
     except MediaSendError as e:
-        logger.error(f"---!!! HỦY CA KÉO do lỗi MediaSendError: {e} !!!---")
+        logger.error(f"---!!! HỦY 𝓒𝓐 𝓚𝓔́𝓞 do lỗi MediaSendError: {e} !!!---")
         await sender._send_message_with_retry(
             f"❗️❗️ <b>THÔNG BÁO KHẨN</b> ❗️❗️\n\n"
-            f"Rất tiếc, ca kéo <b>{session_time.strftime('%H:%M')}</b> đã gặp sự cố kỹ thuật và không thể tiếp tục.\n\n"
+            f"Rất tiếc, 𝓒𝓐 𝓚𝓔́𝓞 <b>{session_time.strftime('%H:%M')}</b> đã gặp sự cố kỹ thuật và không thể tiếp tục.\n\n"
             f"Nguyên nhân: <i>Lỗi không thể gửi tệp media quan trọng.</i>\n\n"
             f"Mong toàn thể anh em thông cảm. Chúng tôi sẽ khắc phục sớm nhất có thể."
         )
 
     except Exception as e:
-        logger.error(f"❌ Gặp lỗi không xác định nghiêm trọng giữa ca kéo: {e}")
+        logger.error(f"❌ Gặp lỗi không xác định nghiêm trọng giữa 𝓒𝓐 𝓚𝓔́𝓞: {e}")
     
     finally:
         await sender.send_end_session(session_time, next_session_time, message_id_to_pin)
-        logger.info(f"====== KẾT THÚC CA KÉO #{session_number} ({session_time.strftime('%H:%M')}) ======\n")
+        logger.info(f"====== KẾT THÚC 𝓒𝓐 𝓚𝓔́𝓞 #{session_number} ({session_time.strftime('%H:%M')}) ======\n")
 
 async def main_loop(sender: BotSender):
     logger.info("🚀 Bot đang khởi động và kiểm tra lịch trình...")
