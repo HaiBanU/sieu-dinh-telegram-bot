@@ -87,7 +87,7 @@ def get_start_session_caption(session_time: datetime, session_number: int):
     # Tin nhắn cho CA 1
     if session_number == 1:
         return f"""🔥🔥  <b>CA KÉO {session_number}: {time_str}</b> 
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━
 🚀 <b>Bắt đầu ngày mới!</b> Chúc toàn thể anh em một ngày giao dịch đại thắng, gặt hái nhiều thành công!
 
 💰💰💰ANH EM TẬP TRUNG, CHUẨN BỊ VÀO CA.💰💰💰
@@ -96,7 +96,7 @@ def get_start_session_caption(session_time: datetime, session_number: int):
     # Tin nhắn cho CA 100 (ca cuối)
     elif session_number == 100:
         return f"""🔥🔥  <b>CA KÉO {session_number} (CA CUỐI): {time_str}</b> 
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━
 Đây là ca cuối cùng trong ngày, mọi người vào lệnh xong chốt lãi ngủ một giấc thật ngon nhé.
 Ngày mai chúng ta lại bắt đầu vào lúc 7h sáng!
 
@@ -106,14 +106,14 @@ Ngày mai chúng ta lại bắt đầu vào lúc 7h sáng!
     # Tin nhắn cho các ca còn lại
     else:
         return f"""🔥🔥  <b>CA KÉO {session_number}: {time_str}</b>  
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━
 💰💰💰ANH EM TẬP TRUNG, CHUẨN BỊ VÀO CA.
 💎💎BOSS💎💎 đang vào sảnh, sẽ báo bàn ngay sau đây..."""
 
 
 def get_table_announcement_caption(table_number: int):
     return f"""💎 💎  <b>𝗦𝗔̉𝗡𝗛 𝗖𝗛𝗢̛𝗜: 𝗦𝗘𝗫𝗬 𝗕𝗔𝗖𝗖𝗔𝗥𝗔𝗧</b> 
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━
 🃏  <b>𝗕𝗔̀𝗡 Đ𝗔̃ 𝗖𝗛𝗢̣𝗡:  BACCATAT {table_number}</b>
 
 <i>Anh em tập trung vào bàn này.
@@ -126,14 +126,14 @@ def get_prediction_caption():
     ly_do = random.choice(PREDICTION_REASONS[du_doan])
     
     return f"""⚡️⚡️ <b>LỆNH TỪ CHUYÊN GIA</b> 
-━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━
 <i>"{ly_do}"</i>
 
 👉 <b>LỰA CHỌN CUỐI CÙNG:</b>
 
 <b>{icon} {du_doan.upper()} {icon}</b>
 
-━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━
 💰 <b>Vào vốn:</b> <b><code>10% TỔNG VỐN</code></b>
 🎯 <b>Nguyên tắc:</b> Giữ vững kỷ luật!
 <i>(Lệnh ra lúc: {now.strftime('%H:%M:%S')})</i>"""
@@ -147,14 +147,14 @@ def get_prediction_text_fallback():
     
     return f"""⚠️ <b>THÔNG BÁO DỰ PHÒNG (LỖI VIDEO)</b> ⚠️
 ⚡️⚡️ <b>LỆNH TỪ CHUYÊN GIA</b> ⚡️⚡️
-━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━
 <i>Phân tích: "{ly_do}"</i>
 
 👉 <b>LỰA CHỌN CUỐI CÙNG:</b>
 
 <b>{icon} {du_doan.upper()} {icon}</b>
 
-━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━
 💰 <b>Vào vốn:</b> <b><code>10% TỔNG VỐN</code></b>
 🎯 <b>Nguyên tắc:</b> Giữ vững kỷ luật!
 <i>(Lệnh ra lúc: {now.strftime('%H:%M:%S')})</i>"""
@@ -163,7 +163,7 @@ def get_end_session_caption(session_time: datetime, next_session_time: datetime)
     time_str = session_time.strftime('%H:%M - %d/%m')
     next_time_str = next_session_time.strftime('%H:%M')
     return f"""🏁   <b>𝗞𝗘̂́𝗧 𝗧𝗛𝗨́𝗖 𝗖𝗔 𝗞𝗘́𝗢: {time_str}</b>   🏁
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━
 Toàn bộ anh em nghỉ ngơi, bảo toàn lợi nhuận và chuẩn bị cho cơ hội tiếp theo.
 <b>Kỷ luật là sức mạnh!</b>
 
@@ -172,7 +172,7 @@ Toàn bộ anh em nghỉ ngơi, bảo toàn lợi nhuận và chuẩn bị cho c
 def get_animated_rules_caption():
     """Lấy nội dung caption cho video Nội Quy Vàng."""
     return f"""📜   <b>𝗡𝗢̣̂𝗜 𝗤𝗨𝗬 𝗩𝗔̀𝗡𝗚 — ANH EM CẦN XEM KỸ</b>   📜
-━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━
 <i>Để đảm bảo một sân chơi công bằng và hiệu quả, anh em vui lòng xem kỹ video và tuân thủ các nguyên tắc của nhóm.</i>
 
 🆘 Mọi thắc mắc cần hỗ trợ, liên hệ ngay cho <b>{config.BOSS_SUPPORT_LINK}</b> để được giải đáp!"""
